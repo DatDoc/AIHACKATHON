@@ -11,7 +11,9 @@
 import argparse
 import tkinter as tk
 import os
+import time
 from shutil import copyfile, move
+from tkinter import messagebox
 import tkinter.font as font
 from PIL import ImageTk, Image
 categ = {
@@ -47,6 +49,7 @@ class ImageGui:
 
         # Initialise grid
         frame.grid()
+
 
         # Start at the first file name
         self.index = 0
@@ -170,7 +173,7 @@ class ImageGui:
         
         f = open(res_path, "a")
         
-        f.write("{}\t{}\n".format(input_path.split("/")[-1], categ[label]))
+        f.write("{}\t{}\n".format(input_path.split("\\")[-1], categ[label]))
         f.close()
 
     @staticmethod
@@ -196,22 +199,23 @@ def make_folder(directory):
     if not os.path.exists(directory):
         os.makedirs(directory)
 
+
 # The main bit of the script only gets exectured if it is directly called
 if __name__ == "__main__":
 
     # Make input arguments
     parser = argparse.ArgumentParser()
     parser.add_argument('-i', '--image_folder', help='test images', required=True)
-    parser.add_argument('-l', '--low_conf_file', help='text file contain predicted result', required=True)
+    parser.add_argument('-p', '--predicted', help='text file contain predicted result', required=True)
     # parser.add_argument('-l', '--labels', nargs='+', help='Possible labels in the images', required=True)
-    parser.add_argument('-r', '--res_file', help='result file to write', required=True)
+    parser.add_argument('-r', '--result', help='result file to write', required=True)
     args = parser.parse_args()
 
     # grab input arguments from args structure
     input_folder = args.image_folder
-    predicted_file = args.low_conf_file
+    predicted_file = args.predicted
     labels = ["0", "cây đổ", "hỏa hoạn", "ngập lụt", "đường xấu", "kẹt xe", "rác thải", "tai nạn"]
-    res_file = args.res_file
+    res_file = args.result
     
     # Make folder for the new labels
     # for label in labels:
@@ -222,11 +226,17 @@ if __name__ == "__main__":
     paths = []
     for file in f.readlines():
         file = file.rstrip()
-        if file.split(".")[1] == "jpg" or file.split(".")[1] == "jpeg" or file.split(".")[1] == "png":
+        name = file.split(".")[1]
+        name = name.lower()
+        if name == "jpg" or name == "jpeg" or name == "png":
             path = os.path.join(input_folder, file)
             paths.append(path)
-
+    # print(paths)
+    # aaaaa
     # Start the GUI
     root = tk.Tk()
+    # label = tk.Label(root, width=30)
+    # label.pack(padx=20, pady=20)
     app = ImageGui(root, labels, paths, res_file)
+    # countdown(3)
     root.mainloop()
