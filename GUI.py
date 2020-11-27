@@ -179,7 +179,7 @@ class ImageGui:
         
         f = open(res_path, "a")
         
-        f.write("{}\t{}\n".format(input_path.split("\\")[-1], categ[label]))
+        f.write("{}\t{}\n".format(input_path.split("/")[-1], categ[label]))
         f.close()
 
     @staticmethod
