@@ -17,14 +17,14 @@ from tkinter import messagebox
 import tkinter.font as font
 from PIL import ImageTk, Image
 categ = {
-    "0": 0,
-    "cây đổ": 1,
-    "hỏa hoạn": 2,
-    "ngập lụt": 3,
-    "đường xấu": 4,
-    "kẹt xe": 5,
-    "rác thải": 6,
-    "tai nạn": 7
+    "[0]": 0,
+    "[1] cây đổ": 1,
+    "[2] hỏa hoạn": 2,
+    "[3] ngập lụt": 3,
+    "[4] đường xấu": 4,
+    "[5] kẹt xe": 5,
+    "[6] rác thải": 6,
+    "[7]tai nạn": 7
 }
 class ImageGui:
     """
@@ -43,7 +43,7 @@ class ImageGui:
 
         # So we can quit the window from within the functions
         self.master = master
-        #master.geometry("800x600")
+        # master.geometry("800x600")
         # Extract the frame so we can draw stuff on it
         frame = tk.Frame(master)
 
@@ -73,7 +73,7 @@ class ImageGui:
         self.buttons = []
         for label in labels:
             self.buttons.append(
-                    tk.Button(frame, text=label, width=10, height=5, command=lambda l=label: self.vote(l), bg="green", font=font.Font(weight="bold"))
+                    tk.Button(frame, text=label, width=10, height=3, command=lambda l=label: self.vote(l), bg="yellow", font=font.Font(weight="bold"))
             )
 
         # Add progress label
@@ -81,15 +81,21 @@ class ImageGui:
         self.progress_label = tk.Label(frame, text=progress_string, width=10)
 
         # Place buttons in grid
-        for ll, button in enumerate(self.buttons):
-            button.grid(row=3, column=ll, padx=5, pady=20)
+        
+        for i in range(0, 8):
+            if i >= 0 and i < 4:
+                self.buttons[i].grid(row = 0, column = i + 2, rowspan=2, padx=2)
+            elif i >=4 and i < 8:
+                self.buttons[i].grid(row = 1, column = i - 2, rowspan=2, padx=2)
+        # for ll, button in enumerate(self.buttons):
+        #     button.grid(row=0 , column=ll + 1, padx=2, pady=2, sticky='e')
             #frame.grid_columnconfigure(ll, weight=1)
 
         # Place progress label in grid
         self.progress_label.grid(row=3, column=self.n_labels, sticky='we')
 
         # Place the image in grid
-        self.image_panel.grid(row=1, column=0, columnspan=self.n_labels+11, sticky='we')
+        self.image_panel.grid(row=0, column=0, rowspan=4, sticky='w')
 
         # key bindings (so number pad can be used as shortcut)
         for key in range(self.n_labels):
@@ -173,7 +179,7 @@ class ImageGui:
         
         f = open(res_path, "a")
         
-        f.write("{}\t{}\n".format(input_path.split("/")[-1], categ[label]))
+        f.write("{}\t{}\n".format(input_path.split("\\")[-1], categ[label]))
         f.close()
 
     @staticmethod
@@ -207,14 +213,13 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument('-i', '--image_folder', help='test images', required=True)
     parser.add_argument('-p', '--predicted', help='text file contain predicted result', required=True)
-    # parser.add_argument('-l', '--labels', nargs='+', help='Possible labels in the images', required=True)
     parser.add_argument('-r', '--result', help='result file to write', required=True)
     args = parser.parse_args()
 
     # grab input arguments from args structure
     input_folder = args.image_folder
     predicted_file = args.predicted
-    labels = ["0", "cây đổ", "hỏa hoạn", "ngập lụt", "đường xấu", "kẹt xe", "rác thải", "tai nạn"]
+    labels = ["[0]", "[1] cây đổ", "[2] hỏa hoạn", "[3] ngập lụt", "[4] đường xấu", "[5] kẹt xe", "[6] rác thải", "[7] tai nạn"]
     res_file = args.result
     
     # Make folder for the new labels
@@ -228,7 +233,7 @@ if __name__ == "__main__":
         file = file.rstrip()
         name = file.split(".")[1]
         name = name.lower()
-        if name == "jpg" or name == "jpeg" or name == "png":
+        if name == "jpg" or name == "jpeg" or name == "png" or name == "gif" or name == "bmp":
             path = os.path.join(input_folder, file)
             paths.append(path)
     # print(paths)
