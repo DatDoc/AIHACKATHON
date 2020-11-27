@@ -153,6 +153,7 @@ class ImageGui:
         """
         image = Image.open(path)
         image = image.resize(size, Image.ANTIALIAS)
+
         return image
 
     @staticmethod
@@ -234,8 +235,15 @@ if __name__ == "__main__":
         name = file.split(".")[1]
         name = name.lower()
         if name == "jpg" or name == "jpeg" or name == "png" or name == "gif" or name == "bmp":
-            path = os.path.join(input_folder, file)
-            paths.append(path)
+            try:
+                img = Image.open(os.path.join(input_folder, file))
+                path = os.path.join(input_folder, file)
+                paths.append(path)
+            except:
+                f = open(res_file, "a")
+                f.write("{}\t{}\n".format(file, 0))
+                f.close()
+                continue
     # print(paths)
     # aaaaa
     # Start the GUI
