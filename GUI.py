@@ -24,7 +24,7 @@ categ = {
     "[4] đường xấu": 4,
     "[5] kẹt xe": 5,
     "[6] rác thải": 6,
-    "[7]tai nạn": 7
+    "[7] tai nạn": 7
 }
 class ImageGui:
     """
